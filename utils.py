@@ -2,6 +2,7 @@
 import torch
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+import json
 
 
 def add_bounding_boxes(ax, bbs, category_dict=None):
@@ -60,3 +61,14 @@ def load_model(model, path, device):
     state_dict = torch.load(path, map_location=device)
     model.load_state_dict(state_dict)
     return model
+
+
+def get_category_dict(ann_file):
+    category_dict = {}
+    with open(ann_file, 'rb') as json_file:
+        data = json.load(json_file)
+        for c in data['categories']:
+            category_dict[int(c['id'])] = c
+
+    # print(category_dict)
+    return category_dict

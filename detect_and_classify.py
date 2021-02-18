@@ -16,7 +16,7 @@ def main():
     detector = Detector().to(device)
 
     # load a trained model
-    detector = utils.load_model(detector, './trained_models/det_2021-02-16_15-14-19-181578.pt', device)
+    detector = utils.load_model(detector, './trained_models/det_2021-02-18_13-44-43-005153.pt', device)
 
     category_dict = utils.get_category_dict('./dd2419_coco/annotations/training.json')
     
