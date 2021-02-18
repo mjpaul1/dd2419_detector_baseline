@@ -137,12 +137,13 @@ class Detector(nn.Module):
 
         # If there is no bb, the first 4 channels will not influence the loss
         # -> can be any number (will be kept at 0 zero)
-        target = torch.zeros(5, 15, 20)
+        target = torch.zeros(20, 15, 20)
         for ann in anns:
             x = ann["bbox"][0]
             y = ann["bbox"][1]
             width = ann["bbox"][2]
             height = ann["bbox"][3]
+            category = ann["category_id"]
 
             x_center = x + width / 2.0
             y_center = y + height / 2.0
