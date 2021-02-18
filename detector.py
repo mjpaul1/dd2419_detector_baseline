@@ -23,7 +23,7 @@ class Detector(nn.Module):
         # output of mobilenet_v2 will be 1280x15x20 for 480x640 input images
 
         self.head = nn.Conv2d(
-            in_channels=1280, out_channels=5, kernel_size=1
+            in_channels=1280, out_channels=20, kernel_size=1
         )
         # 1x1 Convolution to reduce channels to out_channels without changing H and W
 
@@ -93,6 +93,9 @@ class Detector(nn.Module):
                     self.img_width / self.out_cells_x * (bb_index[1] + bb_coeffs[0])
                     - width / 2.0
                 )
+                
+                category_one_hot = bb_coeffs = o[5:19, bb_index[0], bb_index[1]]
+                category = torch.argmax(category_one_hot).item()
 
                 img_bbs.append(
                     {
@@ -159,5 +162,12 @@ class Detector(nn.Module):
             target[1, y_ind, x_ind] = y_cell_pos
             target[2, y_ind, x_ind] = rel_width
             target[3, y_ind, x_ind] = rel_height
+            
+            # positions 5-20 are for category
+            # one hot encoding at index 5-19,
+            # where 5 corresponds to category id 0
+            # category is id in [0,15]
+            target[5:19, y_ind, x_ind] = 0
+            target[category + 5, y_ind, x_ind] = 1
 
         return image, target
