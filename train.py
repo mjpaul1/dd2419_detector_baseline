@@ -84,13 +84,13 @@ def train(device="cpu"):
 
             # positive / negative indices
             # (this could be passed from input_transform to avoid recomputation)
-            pos_indices = torch.nonzero(target_batch[:, 4, :, :] == 1, as_tuple=True)
-            neg_indices = torch.nonzero(target_batch[:, 4, :, :] == 0, as_tuple=True)
+            pos_indices = torch.nonzero(target_batch[:, 20, :, :] == 1, as_tuple=True)
+            neg_indices = torch.nonzero(target_batch[:, 20, :, :] == 0, as_tuple=True)
 
             # compute loss
             reg_mse = nn.functional.mse_loss(
-                out[pos_indices[0], 0:4, pos_indices[1], pos_indices[2]],
-                target_batch[pos_indices[0], 0:4, pos_indices[1], pos_indices[2]],
+                out[pos_indices[0], 0:20, pos_indices[1], pos_indices[2]],
+                target_batch[pos_indices[0], 0:20, pos_indices[1], pos_indices[2]],
             )
             pos_mse = nn.functional.mse_loss(
                 out[pos_indices[0], 4, pos_indices[1], pos_indices[2]],
