@@ -103,6 +103,7 @@ class Detector(nn.Module):
                         "height": height,
                         "x": x,
                         "y": y,
+                        "category", category
                     }
                 )
             bbs.append(img_bbs)
