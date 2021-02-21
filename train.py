@@ -34,7 +34,7 @@ def train(device="cpu"):
 
     dataset = CocoDetection(
         root="./dd2419_coco/training",
-        annFile="./dd2419_coco/annotations/training.json",
+        annFile="./dd2419_coco/annotations/augmented.json",
         transforms=detector.input_transform,
     )
 
@@ -43,7 +43,7 @@ def train(device="cpu"):
     # training params
     max_iterations = wandb.config.max_iterations = 10000
     learning_rate = wandb.config.learning_rate = 1e-4
-    weight_reg = wandb.config.weight_reg = 1
+    weight_reg = wandb.config.weight_reg = 1.5
     weight_noobj = wandb.config.weight_noobj = 1
 
     # run name (to easily identify model later)
@@ -152,7 +152,7 @@ def train(device="cpu"):
 
     print("\nTraining completed (max iterations reached)")
 
-    model_path = "{}.pt".format(run_name)
+    model_path = "./trained_models/{}.pt".format(run_name)
     utils.save_model(detector, model_path)
     wandb.save(model_path)
 

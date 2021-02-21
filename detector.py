@@ -27,8 +27,8 @@ class Detector(nn.Module):
         )
         # 1x1 Convolution to reduce channels to out_channels without changing H and W
 
-        # 1280x15x20 -> 5x15x20, where each element 5 channel tuple corresponds to
-        #   (rel_x_offset, rel_y_offset, rel_x_width, rel_y_height, confidence
+        # 1280x15x20 -> 20x15x20, where each element 20 channel tuple corresponds to
+        #   (rel_x_offset, rel_y_offset, rel_x_width, rel_y_height, confidence, signs probability
         # Where rel_x_offset, rel_y_offset is relative offset from cell_center
         # Where rel_x_width, rel_y_width is relative to image size
         # Where confidence is predicted IOU * probability of object center in this cell
@@ -68,7 +68,7 @@ class Detector(nn.Module):
                 - "y": Top-left corner row
                 - "width": Width of bounding box in pixel
                 - "height": Height of bounding box in pixel
-                - "category": Category (not implemented yet!)
+                - "category": Category 
         """
         bbs = []
         # decode bounding boxes for each image
