@@ -11,11 +11,13 @@ def main():
 
     annFile="./dd2419_coco/annotations/training.json"
     with open(annFile) as json_file: 
-        data = json.load(json_file)
+        data1 = json.load(json_file)
 
-    for image in range(0,len(data["annotations"])):
+    for image in range(0,len(data1["annotations"])):
+        data = data1.copy()
         #get image path
-        imgFile = data["images"][image]['file_name']
+        img_id = data["annotations"][image]["image_id"]
+        imgFile = data["images"][img_id]['file_name']
         imgFile_path = './dd2419_coco/training/'+imgFile
         #print(image)
         img = Image.open(imgFile_path)
@@ -52,10 +54,10 @@ def main():
         data["images"].append(imgdict)
 
         #new dict for bbox info
-        bboxdict = data["annotations"][image]
+        bboxdict = data["annotations"][image].copy()
         bboxdict["id"]=nb
         bboxdict["image_id"]=nb
-        bboxdict["bbox"]=[0, 0, w, h]
+        bboxdict["bbox"]=[320 - w/2.0, 240 - h/2.0, w, h]
 
         #add it in data
         data["annotations"].append(bboxdict)
@@ -68,9 +70,9 @@ def main():
         #gr_im= Image.fromarray(im).save("./dd2419_coco/training/tr_"+imgFile)
         img.save("./dd2419_coco/training/cr_"+imgFile)
 
-        #save new .json annotation file
-        with open("./dd2419_coco/annotations/augmented.json", "w") as outfile:  
-            json.dump(data, outfile) 
+    #save new .json annotation file
+    with open("./dd2419_coco/annotations/augmented.json", "w") as outfile:  
+        json.dump(data, outfile) 
 
     
     #im = np.array(Image.open('./dd2419_coco/training/000000.jpg').convert('L'))

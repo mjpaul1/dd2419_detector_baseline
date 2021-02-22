@@ -16,7 +16,7 @@ def main():
     detector = Detector().to(device)
 
     # load a trained model
-    detector = utils.load_model(detector, './trained_models/det_2021-02-20_11-53-23-973572.pt', device)
+    detector = utils.load_model(detector, './trained_models/classif_conf.pt', device)
 
     category_dict = utils.get_category_dict('./dd2419_coco/annotations/training.json')
     
@@ -50,8 +50,36 @@ def main():
                 alpha=0.7,
             )
 
+            #keep only the best bbox
+            if len(bbs[i])>1:
+                bbx=[bbs[i][0]]
+                print(bbs[i][1:])
+                for elem in bbs[i][1:]:
+                    print(bbx)
+                    i = False
+                    for box in bbx:
+                        #print('hehe')
+                        x_center_elem = elem['x'].item()-elem['width'].item()/2
+                        x_center_box = box['x'].item()-box['width'].item()/2
+                        y_center_elem = elem['y'].item()-elem['height'].item()/2
+                        y_center_box = box['y'].item()-box['height'].item()/2
+                        print(((y_center_elem-y_center_box)**2+(x_center_elem-x_center_box)**2)**(1/2))
+                        if ((y_center_elem-y_center_box)**2+(x_center_elem-x_center_box)**2)**(1/2) <100:
+                            if box['category_conf']<elem['category_conf']:
+                                bbx.remove(box)
+                                bbx.append(elem)
+                            i=True
+                    if i == False:
+                        bbx.append(elem)
+                                
+            #        
+            #    bbx = [max(bbs[i], key=lambda x:x['category_conf'])]
+            #    #print(bbx)
+            else:
+                bbx = bbs[i].copy()
             # add bounding boxes
-            utils.add_bounding_boxes(ax, bbs[i], category_dict)
+            utils.add_bounding_boxes(ax, bbx, category_dict)
+            
 
             # wandb.log(
             #     {"test_img_{i}".format(i=i): figure}, step=current_iteration
