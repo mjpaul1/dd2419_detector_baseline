@@ -96,16 +96,19 @@ class Detector(nn.Module):
                 
                 category_one_hot = bb_coeffs = o[5:19, bb_index[0], bb_index[1]]
                 category = torch.argmax(category_one_hot).item()
+                category_conf = torch.max(category_one_hot).item()
 
-                img_bbs.append(
-                    {
-                        "width": width,
-                        "height": height,
-                        "x": x,
-                        "y": y,
-                        "category" : category,
-                    }
-                )
+                if category_conf > 0.75 :
+                    img_bbs.append(
+                        {
+                            "width": width,
+                            "height": height,
+                            "x": x,
+                            "y": y,
+                            "category" : category,
+                            "category_conf" : category_conf,
+                        }
+                    )
             bbs.append(img_bbs)
 
         return bbs
